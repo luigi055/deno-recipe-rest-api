@@ -1,20 +1,15 @@
 import { IRecipe } from "../../domain/model/entities/recipe/index.ts";
 import RecipeRepository from "../../domain/services/repositories/recipes-repository.ts";
 import DataBase from "../services/db/inmemory-db.ts";
+import { IHTTPConnection } from "./types.d.ts";
 
-const createRecipe = async ({
-  request,
-  response,
-}: {
-  request: any;
-  response: any;
-}) => {
+const createRecipe = async ({ request, response }: IHTTPConnection) => {
   const body = await request.body();
   if (!request.hasBody) {
     response.status = 400;
     response.body = {
       success: false,
-      msg: "No data",
+      msg: "No data entered",
     };
     return;
   }

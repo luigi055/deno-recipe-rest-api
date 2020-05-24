@@ -1,9 +1,9 @@
-import { IDataBase, IDataBaseStorage, IDocument } from "./database.d.ts";
+import { IDataBase, IDataBaseStorage, IDocument } from "./types.d.ts";
 import { v4 } from "https://deno.land/std/uuid/mod.ts";
 
-const dataBase: IDataBaseStorage = { recipes: [] };
+const databaseStorage: IDataBaseStorage = { recipes: [] };
 
-class DataBase implements IDataBase {
+class InMemoryDatabase implements IDataBase {
   private _collection: string = "";
 
   constructor(collection: string) {
@@ -11,16 +11,16 @@ class DataBase implements IDataBase {
   }
 
   get collection() {
-    return dataBase[this._collection];
+    return databaseStorage[this._collection];
   }
 
   set collection(value) {
-    dataBase[this._collection] = value;
+    databaseStorage[this._collection] = value;
   }
 
   private findDocumentIdIndex(id: string): number {
     const result = this.collection.findIndex(
-      (document) => document.__id === id
+      (document: IDocument) => document.__id === id
     );
 
     return result;
@@ -55,11 +55,11 @@ class DataBase implements IDataBase {
     const deletedDocument: IDocument = Object.assign({}, this.findById(id));
 
     this.collection = this.collection.filter(
-      (document) => document.__id !== id
+      (document: IDocument) => document.__id !== id
     );
 
     return deletedDocument;
   }
 }
 
-export default DataBase;
+export default InMemoryDatabase;

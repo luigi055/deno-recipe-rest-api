@@ -1,21 +1,17 @@
+import { notFoundErrorMessage } from "./constants.ts";
+import { IHTTPConnectionIdParams } from "./types.d.ts";
 import { IRecipe } from "../../domain/model/entities/recipe/index.ts";
 import RecipeRepository from "../../domain/services/repositories/recipes-repository.ts";
 import DataBase from "../services/db/inmemory-db.ts";
 
-const deleteRecipe = ({
-  params,
-  response,
-}: {
-  params: { id: string };
-  response: any;
-}) => {
+const deleteRecipe = ({ params, response }: IHTTPConnectionIdParams) => {
   const recipeRepository = new RecipeRepository(DataBase);
   const foundRecipe: IRecipe = recipeRepository.findById(params.id);
   if (!foundRecipe) {
     response.status = 404;
     response.body = {
       success: false,
-      msg: "Not Recipe found",
+      msg: notFoundErrorMessage,
     };
 
     return;

@@ -8,12 +8,14 @@ import {
 } from "../controllers/index.ts";
 
 const router = new Router();
+const recipesResourcePath = "/api/v1/recipes" as const;
+const recipePathId = `${recipesResourcePath}/:id`;
 
 router
-  .get("/api/v1/recipes", getRecipes)
-  .get("/api/v1/recipes/:id", getRecipe)
-  .post("/api/v1/recipes", createRecipe)
-  .put("/api/v1/recipes/:id", updateRecipe)
-  .delete("/api/v1/recipes/:id", deleteRecipe);
+  .get(recipesResourcePath, getRecipes)
+  .get(recipePathId, getRecipe)
+  .post(recipesResourcePath, createRecipe)
+  .put(recipePathId, updateRecipe)
+  .delete(recipePathId, deleteRecipe);
 
 export default router;

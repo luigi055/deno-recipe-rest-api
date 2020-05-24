@@ -2,13 +2,13 @@
 
 Simple REST API made in DENO
 
-## Run
+## Run the server
 
 ```
 deno run --allow-net server.ts
 ```
 
-## Routes
+## Recipe resource routes
 
 ```
 GET      /api/v1/recipes

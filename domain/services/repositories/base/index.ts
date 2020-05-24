@@ -1,45 +1,46 @@
 import { IWrite, IRead } from "./types.d.ts";
-import { IDataBase } from "../../../../application/services/db/database.d.ts";
+import { Collection } from "../../../../application/services/db/index.ts";
+import { IDataBase } from "../../../../application/services/db/types.d.ts";
 
 export default abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
-  public _collection: IDataBase;
+  public _database: IDataBase;
 
   constructor(
     db: new (collectionName: string) => IDataBase,
-    collectionName: string
+    collection: Collection
   ) {
-    this._collection = new db(collectionName);
+    this._database = new db(collection.toString());
   }
 
-  get collection(): IDataBase {
-    return this._collection;
+  get database(): IDataBase {
+    return this._database;
   }
 
   create(item: T): T {
-    const result = this.collection.insert(item);
+    const result = this.database.insert(item);
 
     return result;
   }
 
   updateById(id: string, item: T): T {
-    const result = this.collection.updateById(id, item);
+    const result = this.database.updateById(id, item);
 
     return result;
   }
   deleteById(id: string): T {
-    const result = this.collection.deleteById(id);
+    const result = this.database.deleteById(id);
 
     return result;
   }
 
   getAll(): T[] {
-    const result = this.collection.getAll();
+    const result = this.database.getAll();
 
     return result;
   }
 
   findById(id: string): T {
-    const result = this.collection.findById(id);
+    const result = this.database.findById(id);
 
     return result;
   }

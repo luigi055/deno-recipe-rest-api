@@ -1,3 +1,5 @@
+import { notFoundErrorMessage } from "./constants.ts";
+import { IHTTPConnectionIdParams } from "./types.d.ts";
 import { IRecipe } from "../../domain/model/entities/recipe/index.ts";
 import RecipeRepository from "../../domain/services/repositories/recipes-repository.ts";
 import DataBase from "../services/db/inmemory-db.ts";
@@ -6,11 +8,7 @@ const updateProduct = async ({
   params,
   request,
   response,
-}: {
-  params: { id: string };
-  request: any;
-  response: any;
-}) => {
+}: IHTTPConnectionIdParams) => {
   const recipeRepository = new RecipeRepository(DataBase);
   const recipe: IRecipe = recipeRepository.findById(params.id);
 
@@ -18,7 +16,7 @@ const updateProduct = async ({
     response.status = 404;
     response.body = {
       success: false,
-      msg: "No recipe found",
+      msg: notFoundErrorMessage,
     };
     return;
   }
