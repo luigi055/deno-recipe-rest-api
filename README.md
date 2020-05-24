@@ -5,7 +5,7 @@ Simple REST API made in DENO
 ## Run the server
 
 ```
-deno run --allow-net server.ts
+deno run --allow-net --allow-read server.ts
 ```
 
 ## Recipe resource routes

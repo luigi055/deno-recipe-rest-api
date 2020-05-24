@@ -1,7 +1,8 @@
 import { Application } from "https://deno.land/x/oak/mod.ts";
 import router from "./application/core/routes.ts";
+import { config } from "https://deno.land/x/dotenv/mod.ts";
 
-const port = 8000;
+const port = parseInt(config().PORT) || 3000;
 
 const app = new Application();
 
