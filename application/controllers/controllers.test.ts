@@ -4,12 +4,18 @@ import InMemoryDatabase, {
 } from "./../services/db/inmemory-db.ts";
 import { expect } from "https://deno.land/x/expect/expect.ts";
 import { IHTTPConnection } from "./types.d.ts";
-import createRecipe from "./create-recipe.ts";
-import getRecipe from "./get-recipe.ts";
-import getRecipes from "./get-recipes.ts";
-import deleteRecipe from "./delete-recipe.ts";
-import updateRecipe from "./update-recipe.ts";
+import RecipeController from "./recipe-controller.ts";
 
+const clearDatabaseRecipesCollection = () => clearInMemoryDatabase("recipes");
+
+async function createRecipeDocument(): Promise<FakeHTTPConnection> {
+  const recipeController = new RecipeController(InMemoryDatabase);
+  const result = new FakeHTTPConnection();
+  result.enterBody(recipe);
+  await recipeController.createRecipe(result);
+
+  return result;
+}
 class FakeHTTPConnection implements IHTTPConnection {
   public response = { status: 0, body: { data: { __id: "" } } };
   public request = {
@@ -42,9 +48,10 @@ const recipe = {
 const httpStatusCode = (code: number) => code;
 
 Deno.test("it should return 400 when was call without body", async () => {
+  const recipeController = new RecipeController(InMemoryDatabase);
   const mockHTTPConnection = new FakeHTTPConnection();
 
-  await createRecipe(mockHTTPConnection);
+  await recipeController.createRecipe(mockHTTPConnection);
 
   expect(mockHTTPConnection.response.status).toBe(httpStatusCode(400));
 });
@@ -65,41 +72,43 @@ Deno.test(
       status: httpStatusCode(201),
       ...expectedBody,
     });
-    clearInMemoryDatabase("recipes");
+    clearDatabaseRecipesCollection();
   }
 );
 
 Deno.test("it should find all the created recipes", async () => {
+  const recipeController = new RecipeController(InMemoryDatabase);
   const mockHTTPConnection = new FakeHTTPConnection();
   await createRecipeDocument();
   await createRecipeDocument();
   await createRecipeDocument();
 
-  getRecipes(mockHTTPConnection);
+  recipeController.getRecipes(mockHTTPConnection);
 
   expect(mockHTTPConnection.response.status).toBe(httpStatusCode(200));
   expect(mockHTTPConnection.response.body.data).toHaveLength(3);
-  clearInMemoryDatabase("recipes");
+  clearDatabaseRecipesCollection();
 });
 
 Deno.test("it should not find the recipe if id is missing", async () => {
+  const recipeController = new RecipeController(InMemoryDatabase);
   const mockHTTPConnection = new FakeHTTPConnection();
   mockHTTPConnection.enterParam("id", "something");
-  const createdRecipe = await createRecipeDocument();
 
-  getRecipe(mockHTTPConnection);
+  recipeController.getRecipe(mockHTTPConnection);
 
   expect(mockHTTPConnection.response.status).toEqual(httpStatusCode(404));
   expect(mockHTTPConnection.response.body).toEqual({
     success: false,
     msg: notFoundErrorMessage,
   });
-  clearInMemoryDatabase("recipes");
+  clearDatabaseRecipesCollection();
 });
 
 Deno.test(
   "it should find the recipe when the id param match with one recipe document",
   async () => {
+    const recipeController = new RecipeController(InMemoryDatabase);
     const mockHTTPConnection = new FakeHTTPConnection();
     const createdRecipe = await createRecipeDocument();
 
@@ -111,33 +120,35 @@ Deno.test(
       data: { ...recipe, __id: createdRecipe.response.body.data.__id },
     };
 
-    getRecipe(mockHTTPConnection);
+    recipeController.getRecipe(mockHTTPConnection);
 
     expect(mockHTTPConnection.response.status).toEqual(httpStatusCode(200));
     expect(mockHTTPConnection.response.body).toEqual(expectedBody);
     expect(mockHTTPConnection.response.body.data.__id).toEqual(createdRecipeId);
-    clearInMemoryDatabase("recipes");
+    clearDatabaseRecipesCollection();
   }
 );
 
 Deno.test("it should not delete the recipe if id is missing", async () => {
+  const recipeController = new RecipeController(InMemoryDatabase);
   const mockHTTPConnection = new FakeHTTPConnection();
   mockHTTPConnection.enterParam("id", "something");
   const createdRecipe = await createRecipeDocument();
 
-  deleteRecipe(mockHTTPConnection);
+  recipeController.deleteRecipe(mockHTTPConnection);
 
   expect(mockHTTPConnection.response.status).toEqual(httpStatusCode(404));
   expect(mockHTTPConnection.response.body).toEqual({
     success: false,
     msg: notFoundErrorMessage,
   });
-  clearInMemoryDatabase("recipes");
+  clearDatabaseRecipesCollection();
 });
 
 Deno.test(
   "it should delete the recipe when the id param match with one recipe document",
   async () => {
+    const recipeController = new RecipeController(InMemoryDatabase);
     const mockHTTPConnection = new FakeHTTPConnection();
     const createdRecipe = await createRecipeDocument();
 
@@ -149,40 +160,42 @@ Deno.test(
       data: { ...recipe, __id: createdRecipe.response.body.data.__id },
     };
 
-    deleteRecipe(mockHTTPConnection);
+    recipeController.deleteRecipe(mockHTTPConnection);
     expect(mockHTTPConnection.response.status).toEqual(httpStatusCode(200));
     expect(mockHTTPConnection.response.body).toEqual(expectedBody);
     expect(mockHTTPConnection.response.body.data.__id).toEqual(createdRecipeId);
 
-    getRecipe(mockHTTPConnection);
+    recipeController.getRecipe(mockHTTPConnection);
     expect(mockHTTPConnection.response.status).toEqual(httpStatusCode(404));
     expect(mockHTTPConnection.response.body).toEqual({
       success: false,
       msg: notFoundErrorMessage,
     });
 
-    clearInMemoryDatabase("recipes");
+    clearDatabaseRecipesCollection();
   }
 );
 
 Deno.test("it should not update the recipe if id is missing", async () => {
+  const recipeController = new RecipeController(InMemoryDatabase);
   const mockHTTPConnection = new FakeHTTPConnection();
   mockHTTPConnection.enterParam("id", "something");
   await createRecipeDocument();
 
-  await updateRecipe(mockHTTPConnection);
+  await recipeController.updateRecipe(mockHTTPConnection);
 
   expect(mockHTTPConnection.response.status).toEqual(httpStatusCode(404));
   expect(mockHTTPConnection.response.body).toEqual({
     success: false,
     msg: notFoundErrorMessage,
   });
-  clearInMemoryDatabase("recipes");
+  clearDatabaseRecipesCollection();
 });
 
 Deno.test(
   "it should update the recipe when the id param match with one recipe document",
   async () => {
+    const recipeController = new RecipeController(InMemoryDatabase);
     const mockHTTPConnection = new FakeHTTPConnection();
     const createdRecipe = await createRecipeDocument();
     const updatedRecipe = { ...recipe, name: "tortilla de patatas modified" };
@@ -191,25 +204,17 @@ Deno.test(
     mockHTTPConnection.enterParam("id", createdRecipeId);
     mockHTTPConnection.enterBody(updatedRecipe);
 
-    await updateRecipe(mockHTTPConnection);
+    await recipeController.updateRecipe(mockHTTPConnection);
 
     const expectedBody = {
       success: true,
       data: { ...updatedRecipe, __id: createdRecipe.response.body.data.__id },
     };
 
-    updateRecipe(mockHTTPConnection);
     expect(mockHTTPConnection.response.status).toEqual(httpStatusCode(200));
     expect(mockHTTPConnection.response.body).toEqual(expectedBody);
     expect(mockHTTPConnection.response.body.data.__id).toEqual(createdRecipeId);
 
-    clearInMemoryDatabase("recipes");
+    clearDatabaseRecipesCollection();
   }
 );
-
-async function createRecipeDocument() {
-  const mockHTTPConnection = new FakeHTTPConnection();
-  mockHTTPConnection.enterBody(recipe);
-  await createRecipe(mockHTTPConnection);
-  return mockHTTPConnection;
-}
