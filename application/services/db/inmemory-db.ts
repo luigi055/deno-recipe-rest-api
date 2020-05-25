@@ -1,7 +1,11 @@
 import { IDataBase, IDataBaseStorage, IDocument } from "./types.d.ts";
 import { v4 } from "https://deno.land/std/uuid/mod.ts";
 
-const databaseStorage: IDataBaseStorage = { recipes: [] };
+let databaseStorage: IDataBaseStorage = { recipes: [] };
+
+export const clearInMemoryDatabase = (collectionName: string) => {
+  databaseStorage[collectionName] = [];
+};
 
 class InMemoryDatabase implements IDataBase {
   private _collection: string = "";

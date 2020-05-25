@@ -4,7 +4,7 @@ import { IRecipe } from "../../domain/model/entities/recipe/index.ts";
 import RecipeRepository from "../../domain/services/repositories/recipes-repository.ts";
 import DataBase from "../services/db/inmemory-db.ts";
 
-const updateProduct = async ({
+const updateRecipe = async ({
   params,
   request,
   response,
@@ -34,4 +34,4 @@ const updateProduct = async ({
   };
 };
 
-export default updateProduct;
+export default updateRecipe;

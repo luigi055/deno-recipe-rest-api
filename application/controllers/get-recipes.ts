@@ -6,6 +6,7 @@ import { IHTTPConnection } from "./types.d.ts";
 const getProducts = ({ response }: IHTTPConnection) => {
   const recipeRepository = new RecipeRepository(DataBase);
 
+  response.status = 200;
   response.body = {
     success: true,
     data: recipeRepository.getAll(),
