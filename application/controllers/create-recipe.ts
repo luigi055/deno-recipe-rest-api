@@ -1,9 +1,12 @@
 import { IRecipe } from "../../domain/model/entities/recipe/index.ts";
 import RecipeRepository from "../../domain/services/repositories/recipes-repository.ts";
-import DataBase from "../services/db/inmemory-db.ts";
 import { IHTTPConnection } from "./types.d.ts";
+import { DataBaseConstructor } from "./constants.ts";
 
-const createRecipe = async ({ request, response }: IHTTPConnection) => {
+const createRecipe = (database: DataBaseConstructor) => async ({
+  request,
+  response,
+}: IHTTPConnection) => {
   const body = await request.body();
   if (!request.hasBody) {
     response.status = 400;
@@ -14,7 +17,7 @@ const createRecipe = async ({ request, response }: IHTTPConnection) => {
     return;
   }
 
-  const recipeRepository = new RecipeRepository(DataBase);
+  const recipeRepository = new RecipeRepository(database);
   const recipe: IRecipe = recipeRepository.create(body.value);
 
   response.status = 201;

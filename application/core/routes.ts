@@ -1,3 +1,4 @@
+import { DataBaseConstructor } from "./../controllers/constants.ts";
 import { Router } from "https://deno.land/x/oak/mod.ts";
 import {
   createRecipe,
@@ -5,17 +6,23 @@ import {
   updateRecipe,
   getRecipe,
   getRecipes,
+  RecipeController,
 } from "../controllers/index.ts";
+import InMemoryDatabase from "../services/db/inmemory-db.ts";
 
 const router = new Router();
 const recipesResourcePath = "/api/v1/recipes" as const;
 const recipePathId = `${recipesResourcePath}/:id`;
 
-router
-  .get(recipesResourcePath, getRecipes)
-  .get(recipePathId, getRecipe)
-  .post(recipesResourcePath, createRecipe)
-  .put(recipePathId, updateRecipe)
-  .delete(recipePathId, deleteRecipe);
+const setRouter = (database: DataBaseConstructor) => {
+  router
+    .get(recipesResourcePath, getRecipes(database))
+    .get(recipePathId, getRecipe(database))
+    .post(recipesResourcePath, createRecipe(database))
+    .put(recipePathId, updateRecipe(database))
+    .delete(recipePathId, deleteRecipe(database));
 
-export default router;
+  return router;
+};
+
+export default setRouter(InMemoryDatabase);
