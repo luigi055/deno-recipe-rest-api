@@ -1,8 +1,8 @@
-import { notFoundErrorMessage } from "./constants.ts";
-import { IHTTPConnectionIdParams } from "./types.d.ts";
-import { IRecipe } from "../../domain/model/entities/recipe/index.ts";
-import RecipeRepository from "../../domain/services/repositories/recipes-repository.ts";
-import { DataBaseConstructor } from "./constants.ts";
+import { DataBaseConstructor } from "./../../services/db/types.d.ts";
+import { notFoundErrorMessage } from "../constants.ts";
+import { IHTTPConnectionIdParams } from "../types.d.ts";
+import { IRecipe } from "../../../domain/model/entities/recipe/index.ts";
+import RecipeRepository from "../../../domain/services/repositories/recipes-repository.ts";
 
 const getRecipe = (database: DataBaseConstructor) => ({
   params,

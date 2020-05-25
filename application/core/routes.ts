@@ -6,7 +6,6 @@ import {
   updateRecipe,
   getRecipe,
   getRecipes,
-  RecipeController,
 } from "../controllers/index.ts";
 import InMemoryDatabase from "../services/db/inmemory-db.ts";
 

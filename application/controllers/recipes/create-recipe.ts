@@ -1,7 +1,7 @@
-import { IRecipe } from "../../domain/model/entities/recipe/index.ts";
-import RecipeRepository from "../../domain/services/repositories/recipes-repository.ts";
-import { IHTTPConnection } from "./types.d.ts";
-import { DataBaseConstructor } from "./constants.ts";
+import { DataBaseConstructor } from "./../../services/db/types.d.ts";
+import { IRecipe } from "../../../domain/model/entities/recipe/index.ts";
+import RecipeRepository from "../../../domain/services/repositories/recipes-repository.ts";
+import { IHTTPConnection } from "../types.d.ts";
 
 const createRecipe = (database: DataBaseConstructor) => async ({
   request,

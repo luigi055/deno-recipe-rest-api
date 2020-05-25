@@ -1,6 +1,6 @@
-import { DataBaseConstructor } from "./constants.ts";
-import RecipeRepository from "../../domain/services/repositories/recipes-repository.ts";
-import { IHTTPConnection } from "./types.d.ts";
+import { DataBaseConstructor } from "./../../services/db/types.d.ts";
+import RecipeRepository from "../../../domain/services/repositories/recipes-repository.ts";
+import { IHTTPConnection } from "../types.d.ts";
 
 const getRecipes = (database: DataBaseConstructor) => ({
   response,

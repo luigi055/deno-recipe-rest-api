@@ -1,9 +1,9 @@
-import { notFoundErrorMessage } from "./constants.ts";
+import { expect } from "https://deno.land/x/expect/expect.ts";
+import { notFoundErrorMessage } from "../constants.ts";
 import InMemoryDatabase, {
   clearInMemoryDatabase,
-} from "./../services/db/inmemory-db.ts";
-import { expect } from "https://deno.land/x/expect/expect.ts";
-import { IHTTPConnection } from "./types.d.ts";
+} from "./../../services/db/inmemory-db.ts";
+import { IHTTPConnection } from "../types.d.ts";
 import createRecipe from "./create-recipe.ts";
 import getRecipe from "./get-recipe.ts";
 import getRecipes from "./get-recipes.ts";

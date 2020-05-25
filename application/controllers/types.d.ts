@@ -1,3 +1,5 @@
+import { IDataBase } from "./../services/db/types.d.ts";
+
 export interface IHTTPConnection {
   request: any;
   response: any;

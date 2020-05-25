@@ -6,6 +6,7 @@ export interface IDataBase {
   deleteById(id: string): any;
 }
 
+export type DataBaseConstructor = new (collectionName: string) => IDataBase;
 export interface IDocument {
   __id: string;
   [index: string]: any;

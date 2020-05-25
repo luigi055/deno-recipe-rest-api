@@ -1,6 +1,5 @@
-export { default as createRecipe } from "./create-recipe.ts";
-export { default as updateRecipe } from "./update-recipe.ts";
-export { default as deleteRecipe } from "./delete-recipe.ts";
-export { default as getRecipe } from "./get-recipe.ts";
-export { default as getRecipes } from "./get-recipes.ts";
-export { default as RecipeController } from "./recipe-controller.ts";
+export { default as createRecipe } from "./recipes/create-recipe.ts";
+export { default as updateRecipe } from "./recipes/update-recipe.ts";
+export { default as deleteRecipe } from "./recipes/delete-recipe.ts";
+export { default as getRecipe } from "./recipes/get-recipe.ts";
+export { default as getRecipes } from "./recipes/get-recipes.ts";
