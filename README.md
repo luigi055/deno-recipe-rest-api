@@ -2,6 +2,10 @@
 
 Simple REST API made in DENO
 
+## Installing Deno
+
+Follow the instructions from the [Deno's installation guide](https://deno.land/#installation)
+
 ## Run the server
 
 ```

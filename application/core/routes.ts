@@ -1,5 +1,5 @@
-import { DataBaseConstructor } from "./../controllers/constants.ts";
 import { Router } from "https://deno.land/x/oak/mod.ts";
+import { DataBaseConstructor } from "./../services/db/types.d.ts";
 import {
   createRecipe,
   deleteRecipe,
